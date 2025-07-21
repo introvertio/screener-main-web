@@ -8,7 +8,7 @@ export default function ScreensPage() {
   useAuthGuard();
   const { data: screens, isLoading } = useScreens();
   return (
-    <div className="flex flex-col gap-4 items-center justify-center w-svw h-svh p-4">
+    <div className="flex flex-col gap-4 items-center justify-center w-svw minh-svh p-4 py-8">
       <p className="font-bold text-2xl">Screens</p>
       {isLoading ? (
         <p>Loading...</p>

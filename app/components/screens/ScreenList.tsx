@@ -1,4 +1,5 @@
 import { Screen } from "@/lib/get-screens";
+import Link from "next/link";
 import React from "react";
 
 interface ScreenListProps {
@@ -17,6 +18,12 @@ export default function ScreenList({ screen }: ScreenListProps) {
       </p>
       <p className="text-sm">Updated by: {screen.updated_by}</p>
       <video src={screen.video_url} className="size-50 object-contain" />
+      <Link
+        href={`/screens/${screen.index}`}
+        className="bg-blue-500 text-white p-2 rounded-md"
+      >
+        Update Video
+      </Link>
     </div>
   );
 }
