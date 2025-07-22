@@ -2,12 +2,11 @@
 import React, { Suspense } from "react";
 import { useScreen } from "@/app/components/hooks/useScreen";
 import { useAuthGuard } from "@/app/components/useAuthGuard";
-interface ScreenPageProps {
-  params: { screen: string };
-}
+import { useParams } from "next/navigation";
 
-export default function ScreenPage({ params }: ScreenPageProps) {
+export default function ScreenPage() {
   useAuthGuard();
+  const params = useParams();
   const index = Number(params.screen);
   const { data: screen, isLoading, error, refetch } = useScreen(index);
   const {
