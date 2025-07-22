@@ -8,8 +8,6 @@ import { useLogin } from "./components/hooks/useLogin";
 export default function Home() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [isPending, setIsPending] = useState(false);
   const router = useRouter();
 
   const { login } = useLogin();
@@ -57,7 +55,9 @@ export default function Home() {
         onClick={handleLogin}
         disabled={login.isPending}
       >
-        <p className={`text-white text-center text-xl font-bold`}>Login</p>
+        <p className={`text-white text-center text-xl font-bold`}>
+          {login.isPending ? "Logging in..." : "Login"}
+        </p>
       </button>
     </div>
   );
