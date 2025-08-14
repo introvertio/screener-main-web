@@ -17,6 +17,22 @@ export default function ScreenPage() {
   } = require("@/app/components/hooks/useUpdateScreen").useUpdateScreen();
   const [file, setFile] = React.useState<File | null>(null);
   const [fileError, setFileError] = React.useState<string | null>(null);
+  const videoRef = React.useRef<HTMLVideoElement>(null);
+
+  // Handle fullscreen changes
+  React.useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement && videoRef.current) {
+        // If user exits fullscreen, pause the video
+        videoRef.current.pause();
+      }
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
+  }, []);
 
   // Custom date formatting function
   function formatDateTime(dateString: string) {
@@ -111,9 +127,28 @@ export default function ScreenPage() {
           </p>
           <div className="w-full flex justify-center mb-2">
             <video
+              ref={videoRef}
               src={screen.video_url}
-              className="rounded-lg border shadow-md max-h-64 max-w-full object-contain bg-black"
+              playsInline={false}
+              className="rounded-lg border shadow-md max-h-64 max-w-full object-contain bg-black cursor-pointer"
               controls
+              autoPlay
+              onClick={() => {
+                // Go fullscreen when video is clicked
+                if (!document.fullscreenElement) {
+                  videoRef.current?.requestFullscreen().catch((err) => {
+                    console.log("Fullscreen request failed:", err);
+                  });
+                }
+              }}
+              onPlay={() => {
+                // Automatically go fullscreen when video starts playing
+                if (!document.fullscreenElement) {
+                  videoRef.current?.requestFullscreen().catch((err) => {
+                    console.log("Fullscreen request failed:", err);
+                  });
+                }
+              }}
             />
           </div>
         </div>
