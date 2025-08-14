@@ -13,7 +13,12 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "display": "standalone"
+  "theme_color": "#667eea",
+  "background_color": "#667eea",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/",
+  "orientation": "portrait-primary",
+  "categories": ["productivity", "business"],
+  "description": "Sil Screener - A powerful screening tool for your business needs"
 }

@@ -4,6 +4,7 @@ import { login } from "@/lib/login";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLogin } from "./components/hooks/useLogin";
+import { ServiceWorkerStatus } from "./components/ServiceWorkerStatus";
 
 export default function Home() {
   const [username, setUsername] = useState("");
@@ -59,6 +60,7 @@ export default function Home() {
           {login.isPending ? "Logging in..." : "Login"}
         </p>
       </button>
+      <ServiceWorkerStatus />
     </div>
   );
 }
