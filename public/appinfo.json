@@ -1,0 +1,10 @@
+{
+  "id": "com.silwork.screener",
+  "version": "0.0.1",
+  "vendor": "SilWork",
+  "type": "web",
+  "main": "index.html",
+  "title": "Sil Screener",
+  "icon": "icon.png",
+  "largeIcon": "largeIcon.png"
+}

@@ -1,0 +1,62 @@
+/* WebOS specific styles */
+
+/* Handle WebOS remote navigation */
+:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* WebOS safe area adjustments */
+body {
+  margin: 0;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* Ensure proper scaling for TV screens */
+html {
+  font-size: 16px;
+}
+
+@media screen and (min-width: 1920px) {
+  html {
+    font-size: 18px;
+  }
+}
+
+@media screen and (min-width: 3840px) {
+  html {
+    font-size: 24px;
+  }
+}
+
+/* WebOS specific button styles for remote control */
+.webos-focusable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.webos-focusable:focus {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+}
+
+/* Hide mouse cursor on WebOS */
+.webos-tv {
+  cursor: none;
+}
+
+.webos-tv * {
+  cursor: none;
+}
+
+/* Spatial navigation support */
+.webos-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+

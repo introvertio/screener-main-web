@@ -1,5 +1,25 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Environment Setup
+
+Before running the application, you need to set up environment variables for Vercel Blob storage:
+
+1. Create a `.env.local` file in the root directory
+2. Add the following environment variables:
+
+```bash
+# Vercel Blob Configuration (Client-side upload with server token exchange)
+# Get this from your Vercel dashboard: https://vercel.com/dashboard/stores
+BLOB_READ_WRITE_TOKEN=vercel_blob_rw_xxxxxxxxxxxxxxxxx
+```
+
+To get your Vercel Blob token:
+
+1. Go to your [Vercel Dashboard](https://vercel.com/dashboard/stores)
+2. Create a new Blob store or select an existing one
+3. Copy the read-write token
+4. Add it to your `.env.local` file
+
 ## Getting Started
 
 First, run the development server:

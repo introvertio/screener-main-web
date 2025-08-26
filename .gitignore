@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+webos-app/
+scripts/
+sil-screener-webos.ipk
