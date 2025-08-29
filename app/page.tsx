@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLogin } from "./components/hooks/useLogin";
 import { ServiceWorkerStatus } from "./components/ServiceWorkerStatus";
+import Image from "next/image";
 
 export default function Home() {
   const [username, setUsername] = useState("");
@@ -25,7 +26,14 @@ export default function Home() {
     <div
       className={`h-svh w-svw flex flex-col gap-3 justify-center items-center p-4`}
     >
-      <p className={`text-2xl font-bold`}>Login</p>
+      <Image
+        className="object-contain p-2 bg-blue-600 rounded-xl"
+        src="/cover.png"
+        alt="logo"
+        width={600}
+        height={300}
+      />
+      <p className={`text-xl font-bold`}>SIL Screener Login</p>
       <div className={`flex flex-col gap-2 w-full`}>
         <p className={`text-xs font-bold text-black/50`}>Username</p>
         <input
