@@ -43,3 +43,5 @@ next-env.d.ts
 webos-app/
 scripts/
 sil-screener-webos.ipk
+app/webos.css
+WEBOS_BUILD.md

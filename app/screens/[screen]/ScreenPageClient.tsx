@@ -83,9 +83,9 @@ export default function ScreenPageClient() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] || null;
-    if (selectedFile && selectedFile.size > 50 * 1024 * 1024) {
+    if (selectedFile && selectedFile.size > 1000 * 1024 * 1024) {
       setFile(null);
-      setFileError("File size must be less than 50MB.");
+      setFileError("File size must be less than 1000MB.");
     } else {
       setFile(selectedFile);
       setFileError(null);
@@ -158,7 +158,7 @@ export default function ScreenPageClient() {
         >
           <label className="w-full flex flex-col items-center cursor-pointer">
             <span className="mb-2 text-base font-medium text-blue-700">
-              Upload new video (max 50MB)
+              Upload new video (max 1000MB)
             </span>
             <input
               className="hidden"
