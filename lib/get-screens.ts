@@ -27,7 +27,7 @@ export const getScreens = async (
 ): Promise<Screen[] | ScreensByUser> => {
   const response = await axios.get<
     AdminScreensResponse | RegularScreensResponse
-  >(`${API_BASE_URL}/screens`, {
+  >(`${API_BASE_URL}/screens/`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

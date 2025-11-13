@@ -9,7 +9,7 @@ export async function updateScreen(
 ): Promise<SingleScreenResponse> {
   try {
     const response = await axios.put<SingleScreenResponse>(
-      `${API_BASE_URL}/screen/${index}`,
+      `${API_BASE_URL}/screen/${index}/`,
       {
         video_url: videoUrl,
       },
