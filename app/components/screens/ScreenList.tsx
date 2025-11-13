@@ -54,41 +54,38 @@ export default function ScreenList({ screen }: ScreenListProps) {
     return `${hours}:${minutesStr}${ampm} ${dayOfWeek} ${day}${daySuffix} ${month} ${year}`;
   }
   return (
-    <div className="group flex flex-col gap-3 bg-white border border-black p-5 w-full max-w-sm items-center hover:bg-black transition-colors">
-      <div className="flex items-center gap-2 mb-1">
-        <p className="font-bold text-xl text-black group-hover:text-white">
-          Screen {screen.index}
-        </p>
+    <div className="group flex w-full max-w-sm flex-col gap-4 rounded-lg border border-slate-200 bg-white/90 p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-slate-300 hover:bg-white hover:shadow-lg">
+      <div className="flex w-full items-start justify-between">
+        <div>
+          <p className="text-lg font-semibold text-slate-900">Screen {screen.index}</p>
+          <p className="text-sm text-slate-500">
+            Updated by <span className="font-medium text-slate-600">{screen.updated_by}</span>
+          </p>
+        </div>
         {screen.owner && (
-          <span className="text-xs bg-white text-black group-hover:bg-white group-hover:text-black px-2 py-1 border border-black">
+          <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 transition-colors group-hover:border-slate-300 group-hover:bg-slate-200">
             {screen.owner}
           </span>
         )}
       </div>
-      
-      <div className="w-full flex justify-center mb-3">
+
+      <div className="w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-900/5">
         <video
           src={screen.video_url}
-          className="border border-black max-h-40 w-full object-cover bg-black"
+          className="h-44 w-full object-cover"
           controls
           preload="metadata"
         />
       </div>
-      
-      <div className="text-xs text-black group-hover:text-white text-center space-y-1 mb-3">
-        <p>
-          <span className="font-medium">Updated:</span>{" "}
-          <span className="font-mono">{formatDateTime(screen.updated_at)}</span>
-        </p>
-        <p>
-          <span className="font-medium">By:</span>{" "}
-          <span className="font-semibold">{screen.updated_by}</span>
-        </p>
+
+      <div className="flex w-full items-center justify-between text-sm text-slate-500">
+        <span className="font-medium text-slate-600">Updated</span>
+        <span className="font-mono text-xs text-slate-500">{formatDateTime(screen.updated_at)}</span>
       </div>
-      
+
       <Link
         href={`/screens/${screen.index}`}
-        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 font-medium border border-blue-600 w-full text-center text-sm"
+        className="inline-flex w-full items-center justify-center rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
       >
         Update Video
       </Link>

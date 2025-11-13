@@ -99,107 +99,159 @@ export default function ScreenPageClient() {
     refetch();
   };
 
-  if (isLoading) return <div className="p-4 text-black">Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="flex min-h-svh w-full items-center justify-center bg-slate-50 p-4 text-sm font-medium text-slate-500">
+        Loading…
+      </div>
+    );
   if (error)
-    return <div className="p-4 text-red-600">Error loading screen.</div>;
-  if (!screen) return <div className="p-4 text-black">No screen found.</div>;
+    return (
+      <div className="flex min-h-svh w-full items-center justify-center bg-slate-50 p-4 text-sm font-medium text-red-600">
+        Error loading screen.
+      </div>
+    );
+  if (!screen)
+    return (
+      <div className="flex min-h-svh w-full items-center justify-center bg-slate-50 p-4 text-sm font-medium text-slate-500">
+        No screen found.
+      </div>
+    );
 
   return (
-    <Suspense fallback={<div className="p-4 text-black">Loading...</div>}>
-      <div className="flex flex-col gap-8 items-center justify-center w-svw h-svh p-4 bg-white">
-        <div className="flex flex-col gap-4 bg-white border border-black p-8 w-full max-w-md items-center">
-          <div className="flex items-center gap-3 mb-2">
-            <p className="font-bold text-3xl text-black">
-              Screen {screen.index}
-            </p>
-            <span className="text-lg text-black font-medium">
-              • {screen.owner}
-            </span>
-          </div>
-          <p className="text-xs text-black mb-1">
-            Created at:{" "}
-            <span className="font-mono">
-              {formatDateTime(screen.created_at)}
-            </span>
-            <br />
-            Updated at:{" "}
-            <span className="font-mono">
-              {formatDateTime(screen.updated_at)}
-            </span>
-          </p>
-          <p className="text-xs text-black mb-2">
-            Updated by:{" "}
-            <span className="font-semibold">{screen.updated_by}</span>
-          </p>
-          <div className="w-full flex justify-center mb-2">
-            <video
-              ref={videoRef}
-              src={screen.video_url}
-              playsInline={false}
-              className="border border-black max-h-64 max-w-full object-contain bg-black cursor-pointer"
-              controls
-              autoPlay
-              onClick={() => {
-                // Go fullscreen when video is clicked
-                if (!document.fullscreenElement) {
-                  videoRef.current?.requestFullscreen().catch((err) => {
-                    console.log("Fullscreen request failed:", err);
-                  });
-                }
-              }}
-              onPlay={() => {
-                // Automatically go fullscreen when video starts playing
-                if (!document.fullscreenElement) {
-                  videoRef.current?.requestFullscreen().catch((err) => {
-                    console.log("Fullscreen request failed:", err);
-                  });
-                }
-              }}
-            />
-          </div>
+    <Suspense
+      fallback={
+        <div className="flex min-h-svh w-full items-center justify-center bg-slate-50 p-4 text-sm font-medium text-slate-500">
+          Loading…
         </div>
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col gap-3 items-center bg-white border border-black p-6 w-full max-w-md"
-        >
-          <label className="w-full flex flex-col items-center cursor-pointer">
-            <span className="mb-2 text-base font-medium text-black">
-              Upload new video (max 1000MB)
-            </span>
-            <input
-              className="hidden"
-              type="file"
-              accept="video/*"
-              onChange={handleFileChange}
-              disabled={updating}
-            />
-            <div className="w-full h-12 flex items-center justify-center border-2 border-dashed border-black bg-white hover:bg-black hover:text-white transition-colors">
-              <span className="text-black text-sm">
-                {file ? file.name : "Choose a video file..."}
-              </span>
+      }
+    >
+      <div className="min-h-svh w-full bg-slate-50 px-4 py-12">
+        <div className="mx-auto flex max-w-3xl flex-col gap-8">
+          <div className="rounded-lg border border-slate-200 bg-white/90 p-8 shadow-sm backdrop-blur-sm">
+            <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-3xl font-semibold text-slate-900">
+                  Screen {screen.index}
+                </p>
+                <p className="text-sm text-slate-500">
+                  Last updated by{" "}
+                  <span className="font-medium text-slate-600">
+                    {screen.updated_by}
+                  </span>
+                </p>
+              </div>
+              {screen.owner && (
+                <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-sm font-medium text-slate-600">
+                  {screen.owner}
+                </span>
+              )}
             </div>
-          </label>
-          {fileError && (
-            <p className="text-red-600 text-sm mt-1">{fileError}</p>
-          )}
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 font-semibold text-base border border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={!file || updating || !!fileError}
+
+            <div className="mb-6 flex flex-col gap-2 text-sm text-slate-500">
+              <p>
+                <span className="font-medium text-slate-600">Created:</span>{" "}
+                <span className="font-mono text-xs">
+                  {formatDateTime(screen.created_at)}
+                </span>
+              </p>
+              <p>
+                <span className="font-medium text-slate-600">Updated:</span>{" "}
+                <span className="font-mono text-xs">
+                  {formatDateTime(screen.updated_at)}
+                </span>
+              </p>
+            </div>
+
+            <div className="overflow-hidden rounded-lg border border-slate-200 bg-slate-900/5">
+              <video
+                ref={videoRef}
+                src={screen.video_url}
+                playsInline={false}
+                className="max-h-[420px] w-full object-contain"
+                controls
+                autoPlay
+                onClick={() => {
+                  // Go fullscreen when video is clicked
+                  if (!document.fullscreenElement) {
+                    videoRef.current?.requestFullscreen().catch((err) => {
+                      console.log("Fullscreen request failed:", err);
+                    });
+                  }
+                }}
+                onPlay={() => {
+                  // Automatically go fullscreen when video starts playing
+                  if (!document.fullscreenElement) {
+                    videoRef.current?.requestFullscreen().catch((err) => {
+                      console.log("Fullscreen request failed:", err);
+                    });
+                  }
+                }}
+              />
+            </div>
+          </div>
+
+          <form
+            onSubmit={handleSubmit}
+            className="rounded-lg border border-slate-200 bg-white/90 p-6 shadow-sm backdrop-blur-sm"
           >
-            {updating ? "Updating..." : "Update Video"}
-          </button>
-          {updateError && (
-            <p className="text-red-600 text-center text-sm mt-1">
-              {updateError}
-            </p>
-          )}
-          {success && (
-            <p className="text-green-600 text-center text-sm mt-1">
-              Video updated!
-            </p>
-          )}
-        </form>
+            <label className="flex w-full cursor-pointer flex-col gap-3">
+              <span className="text-base font-medium text-slate-700">
+                Upload new video (max 1000MB)
+              </span>
+              <input
+                className="hidden"
+                type="file"
+                accept="video/*"
+                onChange={handleFileChange}
+                disabled={updating}
+              />
+              <div className="flex h-14 w-full items-center justify-between rounded-lg border border-dashed border-slate-300 bg-slate-100/60 px-4 text-sm text-slate-600 transition-colors hover:border-slate-400 hover:bg-slate-100">
+                <span className="truncate">
+                  {file ? file.name : "Choose a video file…"}
+                </span>
+                <span className="text-xs font-semibold text-slate-500">
+                  Browse
+                </span>
+              </div>
+            </label>
+            {fileError && (
+              <p className="mt-2 text-sm font-medium text-red-600">
+                {fileError}
+              </p>
+            )}
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <button
+                type="submit"
+                className="inline-flex flex-1 items-center justify-center rounded-md bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={!file || updating || !!fileError}
+              >
+                {updating ? "Updating…" : "Update Video"}
+              </button>
+              <button
+                type="button"
+                className="inline-flex items-center rounded-md px-3 py-2 text-sm font-medium text-slate-500 transition-colors hover:text-slate-700 disabled:opacity-50"
+                onClick={() => {
+                  setFile(null);
+                  setFileError(null);
+                }}
+                disabled={updating}
+              >
+                Clear
+              </button>
+            </div>
+            {updateError && (
+              <p className="mt-2 text-sm font-medium text-red-600">
+                {updateError}
+              </p>
+            )}
+            {success && (
+              <p className="mt-2 text-sm font-medium text-emerald-600">
+                Video updated!
+              </p>
+            )}
+          </form>
+        </div>
       </div>
     </Suspense>
   );

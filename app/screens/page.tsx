@@ -34,16 +34,16 @@ export default function ScreensPage() {
     if (isScreenArray(screens)) {
       // Regular user - screens is an array
       return screens.length > 0 ? (
-        <div className="w-full max-w-7xl">
-          <div className="flex flex-wrap gap-4 justify-center">
+        <div className="w-full max-w-6xl">
+          <div className="flex flex-wrap justify-center gap-6">
             {screens.map((screen, idx) => (
               <ScreenList key={screen.index ?? idx + 1} screen={screen} />
             ))}
           </div>
         </div>
       ) : (
-        <div className="text-center py-8">
-          <p className="text-black">No screens found</p>
+        <div className="py-8 text-center">
+          <p className="text-sm font-medium text-slate-500">No screens found</p>
         </div>
       );
     } else {
@@ -52,8 +52,10 @@ export default function ScreensPage() {
 
       if (usernames.length === 0) {
         return (
-          <div className="text-center py-8">
-            <p className="text-black">No screens found</p>
+          <div className="py-8 text-center">
+            <p className="text-sm font-medium text-slate-500">
+              No screens found
+            </p>
           </div>
         );
       }
@@ -61,10 +63,10 @@ export default function ScreensPage() {
       const activeUserScreens = activeTab ? screens[activeTab] || [] : [];
 
       return (
-        <div className="w-full max-w-7xl">
+        <div className="w-full max-w-6xl space-y-6">
           {/* Tab Navigation */}
-          <div className="bg-white border border-black p-1 mb-6">
-            <div className="flex flex-wrap gap-1">
+          <div className="overflow-x-auto">
+            <div className="inline-flex w-full items-center gap-2 rounded-lg border border-slate-200 bg-white/90 p-2 shadow-sm backdrop-blur-sm">
               {usernames.map((username) => {
                 const userScreens = screens[username];
                 const isActive = activeTab === username;
@@ -72,18 +74,18 @@ export default function ScreensPage() {
                   <button
                     key={username}
                     onClick={() => setActiveTab(username)}
-                    className={`px-4 py-2 text-sm font-medium flex items-center gap-2 border ${
+                    className={`inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
                       isActive
-                        ? "bg-blue-600 text-white border-blue-600"
-                        : "text-black border-black bg-white hover:bg-black hover:text-white"
+                        ? "bg-slate-900 text-white shadow-sm"
+                        : "text-slate-600 hover:bg-slate-100"
                     }`}
                   >
                     <span>{username}</span>
                     <span
-                      className={`text-xs px-2 py-0.5 border ${
+                      className={`inline-flex items-center justify-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                         isActive
-                          ? "bg-blue-600 text-white border-blue-600"
-                          : "bg-white text-black border-black"
+                          ? "bg-white/20 text-white"
+                          : "bg-slate-100 text-slate-600"
                       }`}
                     >
                       {userScreens.length}
@@ -96,14 +98,17 @@ export default function ScreensPage() {
 
           {/* Active Tab Content */}
           {activeUserScreens.length > 0 ? (
-            <div className="flex flex-wrap gap-4 justify-center">
+            <div className="flex flex-wrap justify-center gap-6">
               {activeUserScreens.map((screen, idx) => (
                 <ScreenList key={screen.index ?? idx + 1} screen={screen} />
               ))}
             </div>
           ) : (
-            <div className="text-center py-8">
-              <p className="text-black">No screens found for {activeTab}</p>
+            <div className="py-8 text-center">
+              <p className="text-sm font-medium text-slate-500">
+                No screens found for{" "}
+                <span className="font-semibold">{activeTab}</span>
+              </p>
             </div>
           )}
         </div>
@@ -112,16 +117,20 @@ export default function ScreensPage() {
   };
 
   return (
-    <div className="min-h-svh bg-white p-4 py-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="font-bold text-3xl text-black mb-2">Screens</h1>
-          <p className="text-black">Manage and view all screen videos</p>
+    <div className="min-h-svh bg-slate-50 px-4 py-12">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-10 text-center">
+          <h1 className="mb-2 text-3xl font-semibold text-slate-900">
+            Screens
+          </h1>
+          <p className="text-sm text-slate-500">
+            Manage and review your latest screen recordings in one place.
+          </p>
         </div>
 
         {isLoading && (
-          <div className="flex justify-center items-center py-12">
-            <div className="animate-spin h-8 w-8 border-2 border-black border-t-blue-600"></div>
+          <div className="flex items-center justify-center py-12">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-slate-900" />
           </div>
         )}
 
