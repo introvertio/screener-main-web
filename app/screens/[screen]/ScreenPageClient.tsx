@@ -107,9 +107,14 @@ export default function ScreenPageClient() {
     <Suspense fallback={<div>Loading...</div>}>
       <div className="flex flex-col gap-8 items-center justify-center w-svw h-svh p-4 bg-gradient-to-br from-blue-50 to-white">
         <div className="flex flex-col gap-4 bg-white/80 shadow-xl rounded-xl p-8 w-full max-w-md items-center">
-          <p className="font-bold text-3xl text-blue-700 mb-2">
-            Screen {screen.index}
-          </p>
+          <div className="flex items-center gap-3 mb-2">
+            <p className="font-bold text-3xl text-blue-700">
+              Screen {screen.index}
+            </p>
+            <span className="text-lg text-gray-600 font-medium">
+              • {screen.owner}
+            </span>
+          </div>
           <p className="text-xs text-gray-500 mb-1">
             Created at:{" "}
             <span className="font-mono">
