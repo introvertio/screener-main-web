@@ -11,7 +11,7 @@ export const getScreen = async (
   index: number
 ): Promise<SingleScreenResponse> => {
   const response = await axios.get<SingleScreenResponse>(
-    `${API_BASE_URL}/screen/${index}/`,
+    `${API_BASE_URL}/screens/${index}/`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
