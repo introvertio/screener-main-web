@@ -1,6 +1,6 @@
 "use client";
 import { validateAuth } from "@/lib/validate";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useTokenStore } from "./stores/useTokenStore";
 
@@ -8,7 +8,7 @@ export function useAuthGuard(redirectTo?: string) {
   const router = useRouter();
   const { token, setToken } = useTokenStore();
   const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
-
+  const pathname = usePathname();
   useEffect(() => {
     const validateToken = async () => {
       if (typeof window === "undefined") return;
@@ -22,6 +22,11 @@ export function useAuthGuard(redirectTo?: string) {
       if (!isValid) {
         setToken(null);
         router.replace("/");
+      }
+      if (isValid) {
+        if (pathname === "/") {
+          router.replace("/screens");
+        }
       }
     };
 
