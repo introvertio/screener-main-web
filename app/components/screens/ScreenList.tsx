@@ -54,13 +54,13 @@ export default function ScreenList({ screen }: ScreenListProps) {
     return `${hours}:${minutesStr}${ampm} ${dayOfWeek} ${day}${daySuffix} ${month} ${year}`;
   }
   return (
-    <div className="flex flex-col gap-3 bg-white/95 backdrop-blur-sm shadow-lg rounded-xl p-5 w-full max-w-sm items-center border border-blue-100/50 hover:shadow-2xl hover:scale-[1.02] transition-all duration-200">
+    <div className="group flex flex-col gap-3 bg-white border border-black p-5 w-full max-w-sm items-center hover:bg-black transition-colors">
       <div className="flex items-center gap-2 mb-1">
-        <p className="font-bold text-xl text-blue-700">
+        <p className="font-bold text-xl text-black group-hover:text-white">
           Screen {screen.index}
         </p>
         {screen.owner && (
-          <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+          <span className="text-xs bg-white text-black group-hover:bg-white group-hover:text-black px-2 py-1 border border-black">
             {screen.owner}
           </span>
         )}
@@ -69,26 +69,26 @@ export default function ScreenList({ screen }: ScreenListProps) {
       <div className="w-full flex justify-center mb-3">
         <video
           src={screen.video_url}
-          className="rounded-lg border shadow-md max-h-40 w-full object-cover bg-black"
+          className="border border-black max-h-40 w-full object-cover bg-black"
           controls
           preload="metadata"
         />
       </div>
       
-      <div className="text-xs text-gray-500 text-center space-y-1 mb-3">
+      <div className="text-xs text-black group-hover:text-white text-center space-y-1 mb-3">
         <p>
           <span className="font-medium">Updated:</span>{" "}
           <span className="font-mono">{formatDateTime(screen.updated_at)}</span>
         </p>
         <p>
           <span className="font-medium">By:</span>{" "}
-          <span className="font-semibold text-gray-700">{screen.updated_by}</span>
+          <span className="font-semibold">{screen.updated_by}</span>
         </p>
       </div>
       
       <Link
         href={`/screens/${screen.index}`}
-        className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-2 rounded-lg font-medium shadow-md transition-all duration-200 w-full text-center text-sm"
+        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 font-medium border border-blue-600 w-full text-center text-sm"
       >
         Update Video
       </Link>

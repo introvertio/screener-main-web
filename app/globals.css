@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+* {
+  border-radius: 0 !important;
+}
+
+body {
+  background-color: white;
+  color: black;
+}

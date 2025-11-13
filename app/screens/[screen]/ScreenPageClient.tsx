@@ -99,23 +99,24 @@ export default function ScreenPageClient() {
     refetch();
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading screen.</div>;
-  if (!screen) return <div>No screen found.</div>;
+  if (isLoading) return <div className="p-4 text-black">Loading...</div>;
+  if (error)
+    return <div className="p-4 text-red-600">Error loading screen.</div>;
+  if (!screen) return <div className="p-4 text-black">No screen found.</div>;
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <div className="flex flex-col gap-8 items-center justify-center w-svw h-svh p-4 bg-gradient-to-br from-blue-50 to-white">
-        <div className="flex flex-col gap-4 bg-white/80 shadow-xl rounded-xl p-8 w-full max-w-md items-center">
+    <Suspense fallback={<div className="p-4 text-black">Loading...</div>}>
+      <div className="flex flex-col gap-8 items-center justify-center w-svw h-svh p-4 bg-white">
+        <div className="flex flex-col gap-4 bg-white border border-black p-8 w-full max-w-md items-center">
           <div className="flex items-center gap-3 mb-2">
-            <p className="font-bold text-3xl text-blue-700">
+            <p className="font-bold text-3xl text-black">
               Screen {screen.index}
             </p>
-            <span className="text-lg text-gray-600 font-medium">
+            <span className="text-lg text-black font-medium">
               • {screen.owner}
             </span>
           </div>
-          <p className="text-xs text-gray-500 mb-1">
+          <p className="text-xs text-black mb-1">
             Created at:{" "}
             <span className="font-mono">
               {formatDateTime(screen.created_at)}
@@ -126,7 +127,7 @@ export default function ScreenPageClient() {
               {formatDateTime(screen.updated_at)}
             </span>
           </p>
-          <p className="text-xs text-gray-600 mb-2">
+          <p className="text-xs text-black mb-2">
             Updated by:{" "}
             <span className="font-semibold">{screen.updated_by}</span>
           </p>
@@ -135,7 +136,7 @@ export default function ScreenPageClient() {
               ref={videoRef}
               src={screen.video_url}
               playsInline={false}
-              className="rounded-lg border shadow-md max-h-64 max-w-full object-contain bg-black cursor-pointer"
+              className="border border-black max-h-64 max-w-full object-contain bg-black cursor-pointer"
               controls
               autoPlay
               onClick={() => {
@@ -159,10 +160,10 @@ export default function ScreenPageClient() {
         </div>
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col gap-3 items-center bg-white/80 shadow-lg rounded-xl p-6 w-full max-w-md"
+          className="flex flex-col gap-3 items-center bg-white border border-black p-6 w-full max-w-md"
         >
           <label className="w-full flex flex-col items-center cursor-pointer">
-            <span className="mb-2 text-base font-medium text-blue-700">
+            <span className="mb-2 text-base font-medium text-black">
               Upload new video (max 1000MB)
             </span>
             <input
@@ -172,24 +173,24 @@ export default function ScreenPageClient() {
               onChange={handleFileChange}
               disabled={updating}
             />
-            <div className="w-full h-12 flex items-center justify-center border-2 border-dashed border-blue-300 rounded-lg bg-blue-50 hover:bg-blue-100 transition-colors">
-              <span className="text-blue-500 text-sm">
+            <div className="w-full h-12 flex items-center justify-center border-2 border-dashed border-black bg-white hover:bg-black hover:text-white transition-colors">
+              <span className="text-black text-sm">
                 {file ? file.name : "Choose a video file..."}
               </span>
             </div>
           </label>
           {fileError && (
-            <p className="text-red-500 text-sm mt-1">{fileError}</p>
+            <p className="text-red-600 text-sm mt-1">{fileError}</p>
           )}
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold text-lg shadow disabled:opacity-50 transition-colors"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 font-semibold text-base border border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={!file || updating || !!fileError}
           >
             {updating ? "Updating..." : "Update Video"}
           </button>
           {updateError && (
-            <p className="text-red-500 text-center text-sm mt-1">
+            <p className="text-red-600 text-center text-sm mt-1">
               {updateError}
             </p>
           )}

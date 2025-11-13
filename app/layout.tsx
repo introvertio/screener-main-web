@@ -92,7 +92,7 @@ export default function RootLayout({
       </head>
 
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased p-3`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <QueryProvider>
           <ServiceWorkerProvider>{children}</ServiceWorkerProvider>

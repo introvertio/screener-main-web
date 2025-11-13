@@ -24,30 +24,30 @@ export default function Home() {
 
   return (
     <div
-      className={`h-svh w-svw flex flex-col gap-3 justify-center items-center p-4`}
+      className={`h-svh w-svw flex flex-col gap-4 justify-center items-center p-4 bg-white`}
     >
       <Image
-        className="object-contain p-2 bg-blue-600 rounded-xl"
+        className="object-contain p-2 bg-blue-600"
         src="/cover.png"
         alt="logo"
         width={600}
         height={300}
       />
-      <p className={`text-xl font-bold`}>SIL Screener Login</p>
-      <div className={`flex flex-col gap-2 w-full`}>
-        <p className={`text-xs font-bold text-black/50`}>Username</p>
+      <p className={`text-2xl font-bold text-black`}>SIL Screener Login</p>
+      <div className={`flex flex-col gap-2 w-full max-w-md`}>
+        <p className={`text-xs font-bold text-black`}>Username</p>
         <input
-          className={`w-full border-2 border-gray-300 rounded-md p-2 text-xl`}
+          className={`w-full border border-black p-3 text-base bg-white text-black focus:outline-none focus:border-blue-600`}
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           autoCapitalize="none"
         />
       </div>
-      <div className={`flex flex-col gap-2 w-full`}>
-        <p className={`text-xs font-bold text-black/50`}>Password</p>
+      <div className={`flex flex-col gap-2 w-full max-w-md`}>
+        <p className={`text-xs font-bold text-black`}>Password</p>
         <input
-          className={`w-full border-2 border-gray-300 rounded-md p-2 text-xl`}
+          className={`w-full border border-black p-3 text-base bg-white text-black focus:outline-none focus:border-blue-600`}
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -55,16 +55,16 @@ export default function Home() {
         />
       </div>
       {login.error ? (
-        <p className={`text-red-500 text-center w-full`}>
+        <p className={`text-red-600 text-center w-full max-w-md text-sm`}>
           {login.error.message}
         </p>
       ) : null}
       <button
-        className={`w-full bg-blue-500 rounded-md p-2 flex-row items-center justify-center`}
+        className={`w-full max-w-md bg-blue-600 p-3 flex-row items-center justify-center border border-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed`}
         onClick={handleLogin}
         disabled={login.isPending}
       >
-        <p className={`text-white text-center text-xl font-bold`}>
+        <p className={`text-white text-center text-base font-bold`}>
           {login.isPending ? "Logging in..." : "Login"}
         </p>
       </button>
