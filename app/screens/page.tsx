@@ -4,12 +4,13 @@ import React from "react";
 import { useScreens } from "../components/hooks/useScreens";
 import ScreenList from "../components/screens/ScreenList";
 import { Screen, ScreensByUser } from "@/lib/get-screens";
+import { useTokenStore } from "../components/stores/useTokenStore";
 
 export default function ScreensPage() {
   useAuthGuard();
   const { data: screens, isLoading } = useScreens();
   const [activeTab, setActiveTab] = React.useState<string>("");
-
+  const { logout } = useTokenStore();
   // Helper function to check if screens is an array (regular user) or object (admin)
   const isScreenArray = (
     data: Screen[] | ScreensByUser | undefined
@@ -117,7 +118,7 @@ export default function ScreensPage() {
   };
 
   return (
-    <div className="min-h-svh bg-slate-50 px-4 py-12">
+    <div className="min-h-svh bg-slate-50 px-4 py-12 flex flex-col items-center justify-center">
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 text-center">
           <h1 className="mb-2 text-3xl font-semibold text-slate-900">
@@ -136,6 +137,12 @@ export default function ScreensPage() {
 
         {!isLoading && renderScreens()}
       </div>
+      <button
+        onClick={() => logout()}
+        className={`inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium mx-auto mt-4 bg-red-600 text-white`}
+      >
+        Logout
+      </button>
     </div>
   );
 }
