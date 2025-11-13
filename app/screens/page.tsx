@@ -8,9 +8,7 @@ import { Screen, ScreensByUser } from "@/lib/get-screens";
 export default function ScreensPage() {
   useAuthGuard();
   const { data: screens, isLoading } = useScreens();
-  const [expandedUsers, setExpandedUsers] = React.useState<Set<string>>(
-    new Set()
-  );
+  const [activeTab, setActiveTab] = React.useState<string>("");
 
   // Helper function to check if screens is an array (regular user) or object (admin)
   const isScreenArray = (
@@ -19,18 +17,15 @@ export default function ScreensPage() {
     return Array.isArray(data);
   };
 
-  // Toggle user dropdown expansion
-  const toggleUser = (username: string) => {
-    setExpandedUsers((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(username)) {
-        newSet.delete(username);
-      } else {
-        newSet.add(username);
+  // Set initial active tab when screens data loads
+  React.useEffect(() => {
+    if (screens && !isScreenArray(screens) && !activeTab) {
+      const usernames = Object.keys(screens);
+      if (usernames.length > 0) {
+        setActiveTab(usernames[0]);
       }
-      return newSet;
-    });
-  };
+    }
+  }, [screens, activeTab]);
 
   // Helper function to render screen lists
   const renderScreens = () => {
@@ -39,91 +34,99 @@ export default function ScreensPage() {
     if (isScreenArray(screens)) {
       // Regular user - screens is an array
       return screens.length > 0 ? (
-        <div className="flex flex-col gap-2">
-          {screens.map((screen, idx) => (
-            <ScreenList key={screen.index ?? idx + 1} screen={screen} />
-          ))}
+        <div className="w-full max-w-7xl">
+          <div className="flex flex-wrap gap-4 justify-center">
+            {screens.map((screen, idx) => (
+              <ScreenList key={screen.index ?? idx + 1} screen={screen} />
+            ))}
+          </div>
         </div>
       ) : (
-        <p>No screens found</p>
+        <div className="text-center py-8">
+          <p className="text-gray-500">No screens found</p>
+        </div>
       );
     } else {
-      // Admin user - screens is an object grouped by user
-      const allScreens: Screen[] = [];
-      Object.entries(screens).forEach(([username, userScreens]) => {
-        allScreens.push(...userScreens);
-      });
+      // Admin user - tab system
+      const usernames = Object.keys(screens);
 
-      return allScreens.length > 0 ? (
-        <div className="flex flex-col gap-3 w-full max-w-4xl">
-          {Object.entries(screens).map(([username, userScreens]) => {
-            const isExpanded = expandedUsers.has(username);
-            return (
-              <div
-                key={username}
-                className="bg-white/90 rounded-lg shadow-md border border-gray-200 overflow-hidden"
-              >
-                <button
-                  onClick={() => toggleUser(username)}
-                  className="w-full px-6 py-4 text-left bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 transition-colors duration-200 flex items-center justify-between group"
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`transform transition-transform duration-200 ${
-                        isExpanded ? "rotate-90" : "rotate-0"
+      if (usernames.length === 0) {
+        return (
+          <div className="text-center py-8">
+            <p className="text-gray-500">No screens found</p>
+          </div>
+        );
+      }
+
+      const activeUserScreens = activeTab ? screens[activeTab] || [] : [];
+
+      return (
+        <div className="w-full max-w-7xl">
+          {/* Tab Navigation */}
+          <div className="bg-white/90 rounded-lg shadow-sm border border-gray-200 p-1 mb-6">
+            <div className="flex flex-wrap gap-1">
+              {usernames.map((username) => {
+                const userScreens = screens[username];
+                const isActive = activeTab === username;
+                return (
+                  <button
+                    key={username}
+                    onClick={() => setActiveTab(username)}
+                    className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-sm"
+                        : "text-gray-600 hover:text-blue-600 hover:bg-blue-50"
+                    }`}
+                  >
+                    <span>{username}</span>
+                    <span
+                      className={`text-xs px-2 py-0.5 rounded-full ${
+                        isActive
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-200 text-gray-600"
                       }`}
                     >
-                      <svg
-                        className="w-5 h-5 text-gray-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
-                    </div>
-                    <h3 className="font-semibold text-lg text-gray-800 group-hover:text-blue-700 transition-colors">
-                      {username}
-                    </h3>
-                  </div>
-                  <span className="text-sm text-gray-600 bg-white/70 px-3 py-1 rounded-full">
-                    {userScreens.length} screen
-                    {userScreens.length !== 1 ? "s" : ""}
-                  </span>
-                </button>
+                      {userScreens.length}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
-                {isExpanded && (
-                  <div className="p-6 pt-4 bg-white">
-                    <div className="flex flex-col gap-4">
-                      {userScreens.map((screen, idx) => (
-                        <ScreenList
-                          key={screen.index ?? idx + 1}
-                          screen={screen}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+          {/* Active Tab Content */}
+          {activeUserScreens.length > 0 ? (
+            <div className="flex flex-wrap gap-4 justify-center">
+              {activeUserScreens.map((screen, idx) => (
+                <ScreenList key={screen.index ?? idx + 1} screen={screen} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-gray-500">No screens found for {activeTab}</p>
+            </div>
+          )}
         </div>
-      ) : (
-        <p>No screens found</p>
       );
     }
   };
 
   return (
-    <div className="flex flex-col gap-4 items-center w-svw min-h-svh p-4 py-8">
-      <p className="font-bold text-2xl">Screens</p>
-      {isLoading && <p>Loading...</p>}
-      {!isLoading && renderScreens()}
+    <div className="min-h-svh bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-4 py-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="font-bold text-3xl text-gray-800 mb-2">Screens</h1>
+          <p className="text-gray-600">Manage and view all screen videos</p>
+        </div>
+
+        {isLoading && (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          </div>
+        )}
+
+        {!isLoading && renderScreens()}
+      </div>
     </div>
   );
 }
