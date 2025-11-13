@@ -22,8 +22,6 @@ export function useAuthGuard(redirectTo?: string) {
       if (!isValid) {
         setToken(null);
         router.replace("/");
-      } else if (redirectTo) {
-        router.replace(redirectTo);
       }
     };
 
