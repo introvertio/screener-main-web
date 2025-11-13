@@ -6,8 +6,10 @@ import { useRouter } from "next/navigation";
 import { useLogin } from "./components/hooks/useLogin";
 import { ServiceWorkerStatus } from "./components/ServiceWorkerStatus";
 import Image from "next/image";
+import { useAuthGuard } from "./components/useAuthGuard";
 
 export default function Home() {
+  useAuthGuard();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
