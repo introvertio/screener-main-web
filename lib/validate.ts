@@ -8,7 +8,7 @@ export interface ValidateResponse {
 export const validateAuth = async (token: string): Promise<boolean> => {
   try {
     const response = await axios.get<ValidateResponse>(
-      `${API_BASE_URL}/validate/`,
+      `${API_BASE_URL}/validate-token/`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
