@@ -26,15 +26,16 @@ export default function Home() {
 
   return (
     <div
-      className={`h-svh w-svw flex flex-col gap-4 justify-center items-center p-4 bg-white`}
+      className={`h-svh w-svw flex flex-col gap-4 justify-center items-center p-4 relative`}
     >
       <Image
         className="object-contain p-2 bg-blue-600"
         src="/cover.png"
         alt="logo"
-        width={600}
-        height={300}
+        width={400}
+        height={200}
       />
+
       <p className={`text-2xl font-bold text-black`}>SIL Screener Login</p>
       <div className={`flex flex-col gap-2 w-full max-w-md`}>
         <p className={`text-xs font-bold text-black`}>Username</p>
@@ -70,7 +71,6 @@ export default function Home() {
           {login.isPending ? "Logging in..." : "Login"}
         </p>
       </button>
-      <ServiceWorkerStatus />
     </div>
   );
 }

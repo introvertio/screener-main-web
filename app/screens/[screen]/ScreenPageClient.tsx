@@ -167,26 +167,9 @@ export default function ScreenPageClient() {
               <video
                 ref={videoRef}
                 src={screen.video_url}
-                playsInline={false}
+                playsInline={true}
                 className="max-h-[420px] w-full object-contain"
                 controls
-                autoPlay
-                onClick={() => {
-                  // Go fullscreen when video is clicked
-                  if (!document.fullscreenElement) {
-                    videoRef.current?.requestFullscreen().catch((err) => {
-                      console.log("Fullscreen request failed:", err);
-                    });
-                  }
-                }}
-                onPlay={() => {
-                  // Automatically go fullscreen when video starts playing
-                  if (!document.fullscreenElement) {
-                    videoRef.current?.requestFullscreen().catch((err) => {
-                      console.log("Fullscreen request failed:", err);
-                    });
-                  }
-                }}
               />
             </div>
           </div>
