@@ -1,6 +1,7 @@
 "use client";
 import { useAuthGuard } from "@/app/components/useAuthGuard";
 import React from "react";
+import Link from "next/link";
 import { useScreens } from "../components/hooks/useScreens";
 import ScreenList from "../components/screens/ScreenList";
 import { Screen, ScreensByUser } from "@/lib/get-screens";
@@ -137,12 +138,20 @@ export default function ScreensPage() {
 
         {!isLoading && renderScreens()}
       </div>
-      <button
-        onClick={() => logout()}
-        className={`inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium mx-auto mt-4 bg-red-600 text-white`}
-      >
-        Logout
-      </button>
+      <div className="mx-auto mt-4 flex items-center justify-center gap-2">
+        <Link
+          href="/monitor"
+          className="inline-flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium border border-slate-200 bg-white text-slate-700 hover:bg-slate-100"
+        >
+          Monitor
+        </Link>
+        <button
+          onClick={() => logout()}
+          className="inline-flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium bg-red-600 text-white"
+        >
+          Logout
+        </button>
+      </div>
     </div>
   );
 }
