@@ -96,7 +96,9 @@ export default function MonitorPage() {
   const { logout } = useTokenStore();
 
   const showAccount = Boolean(data?.viewer_is_staff);
-  const viewers = data ? viewersByScreen(data.active) : new Map();
+  const viewers = data
+    ? viewersByScreen(data.active)
+    : new Map<number, MonitorActiveSession[]>();
   const groups = data ? screenGroups(data.screens, showAccount) : [];
 
   const stats = data
