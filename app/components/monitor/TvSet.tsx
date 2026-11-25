@@ -5,40 +5,16 @@ import { Play } from "@phosphor-icons/react/dist/ssr/Play";
 import { Power } from "@phosphor-icons/react/dist/ssr/Power";
 import { SquaresFour } from "@phosphor-icons/react/dist/ssr/SquaresFour";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 export type ScreenFaceMode = "playing" | "browsing" | "idle";
 
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const onChange = () => setReduced(media.matches);
-    onChange();
-    media.addEventListener("change", onChange);
-    return () => media.removeEventListener("change", onChange);
-  }, []);
-
-  return reduced;
-}
-
 export function ScreenFace({
   mode,
-  videoUrl,
   screenIndex,
-  animate = false,
 }: {
   mode: ScreenFaceMode;
-  videoUrl?: string;
   screenIndex?: number | null;
-  animate?: boolean;
 }) {
-  const reduced = usePrefersReducedMotion();
-  const [videoFailed, setVideoFailed] = useState(false);
-  const showVideo = mode === "playing" && Boolean(videoUrl) && !videoFailed;
-  const playMotion = animate && !reduced;
-
   if (mode === "browsing") {
     return (
       <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-slate-800 px-3 text-center text-slate-100">
@@ -59,38 +35,20 @@ export function ScreenFace({
     );
   }
 
-  if (!showVideo) {
-    return (
-      <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-slate-900 text-white">
-        <Play size={22} weight="fill" className="text-emerald-400" aria-hidden />
-        <p className="text-4xl font-semibold tabular-nums">{screenIndex ?? ""}</p>
-      </div>
-    );
-  }
-
   return (
-    <>
-      <video
-        key={videoUrl}
-        className="pointer-events-none h-full w-full object-cover"
-        src={playMotion ? videoUrl : `${videoUrl}#t=0.1`}
-        muted
-        playsInline
-        autoPlay={playMotion}
-        loop={playMotion}
-        preload={playMotion ? "auto" : "metadata"}
-        onError={() => setVideoFailed(true)}
-        aria-hidden
-      />
-      <span className="absolute left-2 top-2 bg-slate-950/80 p-1 text-emerald-400">
-        <Play size={14} weight="fill" aria-hidden />
-      </span>
-    </>
+    <div className="flex h-full w-full flex-col items-center justify-center gap-1 bg-emerald-700 px-2 text-center text-white">
+      <Play size={20} weight="fill" aria-hidden />
+      <p className="text-3xl font-semibold tabular-nums leading-none">
+        {screenIndex ?? ""}
+      </p>
+      <p className="text-xs font-medium">Playing</p>
+    </div>
   );
 }
 
 export function TvFrame({
   lit,
+  account,
   caption,
   lines,
   href,
@@ -98,6 +56,7 @@ export function TvFrame({
   children,
 }: {
   lit: boolean;
+  account?: string | null;
   caption: string;
   lines: { text: string; mono?: boolean }[];
   href?: string;
@@ -134,7 +93,15 @@ export function TvFrame({
         <div className={`bg-slate-700 ${compact ? "h-1 w-12" : "h-1.5 w-16"}`} />
       </div>
       <div className="mt-3 w-full text-center">
-        <p className={`font-semibold text-slate-900 ${compact ? "text-sm" : "text-base"}`}>
+        {account ? (
+          <p className="mb-1">
+            <span className="block text-[11px] font-medium text-slate-500">Account</span>
+            <span className={`block font-semibold text-slate-900 ${compact ? "text-sm" : "text-base"}`}>
+              {account}
+            </span>
+          </p>
+        ) : null}
+        <p className={`font-medium text-slate-700 ${compact ? "text-xs" : "text-sm"}`}>
           {caption}
         </p>
         {lines.map((line, index) => (

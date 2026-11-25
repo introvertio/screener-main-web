@@ -2,7 +2,6 @@
 
 import { useAuthGuard } from "@/app/components/useAuthGuard";
 import { useMonitor } from "@/app/components/hooks/useMonitor";
-import { useScreens } from "@/app/components/hooks/useScreens";
 import {
   ScreenFace,
   TvFrame,
@@ -14,9 +13,7 @@ import {
   MonitorActiveSession,
   MonitorScreenStatus,
 } from "@/lib/get-monitor";
-import { Screen, ScreensByUser } from "@/lib/get-screens";
 import { Monitor } from "@phosphor-icons/react/dist/ssr/Monitor";
-import { Play } from "@phosphor-icons/react/dist/ssr/Play";
 import { Power } from "@phosphor-icons/react/dist/ssr/Power";
 import { SignOut } from "@phosphor-icons/react/dist/ssr/SignOut";
 import { SquaresFour } from "@phosphor-icons/react/dist/ssr/SquaresFour";
@@ -51,18 +48,6 @@ function formatShort(dateString: string | null): string {
 
 function fetchLabel(count: number): string {
   return count === 1 ? "1 fetch" : `${count} fetches`;
-}
-
-function videoUrlByIndex(
-  data: Screen[] | ScreensByUser | undefined
-): Map<number, string> {
-  const map = new Map<number, string>();
-  if (!data) return map;
-  const list = Array.isArray(data) ? data : Object.values(data).flat();
-  for (const screen of list) {
-    if (screen.video_url) map.set(screen.index, screen.video_url);
-  }
-  return map;
 }
 
 function viewersByScreen(
@@ -108,11 +93,9 @@ function screenGroups(screens: MonitorScreenStatus[], showAccount: boolean) {
 export default function MonitorPage() {
   useAuthGuard();
   const { data, isLoading, error, dataUpdatedAt, isFetching } = useMonitor();
-  const { data: screenCatalog } = useScreens();
   const { logout } = useTokenStore();
 
   const showAccount = Boolean(data?.viewer_is_staff);
-  const videos = videoUrlByIndex(screenCatalog);
   const viewers = data ? viewersByScreen(data.active) : new Map();
   const groups = data ? screenGroups(data.screens, showAccount) : [];
 
@@ -155,9 +138,8 @@ export default function MonitorPage() {
               </span>
             </div>
             <p className="max-w-xl text-sm text-slate-500">
-              Each set is a TV, and the picture is the screen it is playing. On
-              means the TV fetched in the last {data?.active_window_seconds ?? 150}{" "}
-              seconds.
+              A green set is playing a screen. On means the TV fetched in the
+              last {data?.active_window_seconds ?? 150} seconds.
             </p>
             {dataUpdatedAt ? (
               <p className="mt-1 text-xs text-slate-400">
@@ -167,7 +149,7 @@ export default function MonitorPage() {
             ) : null}
             <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-600">
               <li className="inline-flex items-center gap-1.5">
-                <Play size={14} weight="fill" className="text-emerald-600" aria-hidden />
+                <span className="inline-block h-3 w-3 bg-emerald-700" aria-hidden />
                 Playing a screen
               </li>
               <li className="inline-flex items-center gap-1.5">
@@ -278,6 +260,7 @@ export default function MonitorPage() {
                     <TvFrame
                       key={`${row.username}-${row.screen_index}-${row.client_ip}-${index}`}
                       lit
+                      account={row.username}
                       href={sessionHref(row)}
                       caption={
                         row.status === "playing" && row.screen_index != null
@@ -285,7 +268,11 @@ export default function MonitorPage() {
                           : "Screen list"
                       }
                       lines={[
-                        ...(showAccount ? [{ text: row.username }] : []),
+                        ...(row.status === "playing" &&
+                        row.owner &&
+                        row.owner !== row.username
+                          ? [{ text: `Screen owner ${row.owner}` }]
+                          : []),
                         {
                           text: `Seen ${formatRelativeTime(row.seconds_since_seen)}`,
                         },
@@ -296,12 +283,6 @@ export default function MonitorPage() {
                       <ScreenFace
                         mode={row.status === "playing" ? "playing" : "browsing"}
                         screenIndex={row.screen_index}
-                        videoUrl={
-                          row.screen_index != null
-                            ? videos.get(row.screen_index)
-                            : undefined
-                        }
-                        animate={row.status === "playing"}
                       />
                     </TvFrame>
                   ))}
@@ -334,25 +315,23 @@ export default function MonitorPage() {
                         {group.items.map((screen) => {
                           const tuned = viewers.get(screen.index) ?? [];
                           const lines: { text: string; mono?: boolean }[] = [];
-                          if (showAccount && !group.label) {
-                            lines.push({ text: screen.owner || "Unassigned" });
-                          }
                           if (screen.status === "active") {
-                            if (tuned.length === 1) {
-                              if (
-                                showAccount &&
-                                tuned[0].username !== screen.owner
-                              ) {
-                                lines.push({ text: tuned[0].username });
-                              }
+                            const signedIn = [
+                              ...new Set(tuned.map((row) => row.username)),
+                            ].filter((name) => name && name !== screen.owner);
+                            if (signedIn.length > 0) {
                               lines.push({
-                                text: `Seen ${formatRelativeTime(tuned[0].seconds_since_seen)}`,
+                                text: `Signed in as ${signedIn.join(", ")}`,
                               });
-                            } else if (tuned.length > 1) {
-                              lines.push({ text: `${tuned.length} TVs` });
-                            } else {
-                              lines.push({ text: "On now" });
                             }
+                            if (tuned.length > 1) {
+                              lines.push({ text: `${tuned.length} TVs` });
+                            }
+                            lines.push({
+                              text: tuned[0]
+                                ? `Seen ${formatRelativeTime(tuned[0].seconds_since_seen)}`
+                                : "On now",
+                            });
                           } else {
                             lines.push({ text: "Idle" });
                             lines.push({ text: formatShort(screen.last_seen_at) });
@@ -363,6 +342,7 @@ export default function MonitorPage() {
                               key={screen.index}
                               compact
                               lit={screen.status === "active"}
+                              account={screen.owner || "Unassigned"}
                               href={`/screens/${screen.index}`}
                               caption={`Screen ${screen.index}`}
                               lines={lines}
@@ -370,7 +350,6 @@ export default function MonitorPage() {
                               <ScreenFace
                                 mode={screen.status === "active" ? "playing" : "idle"}
                                 screenIndex={screen.index}
-                                videoUrl={videos.get(screen.index)}
                               />
                             </TvFrame>
                           );
