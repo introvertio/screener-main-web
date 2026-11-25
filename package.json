@@ -20,6 +20,7 @@
     "webos:device-list": "ares-device-list"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "@tanstack/react-query": "^5.83.0",
     "@vercel/blob": "^1.1.1",
     "axios": "^1.10.0",
